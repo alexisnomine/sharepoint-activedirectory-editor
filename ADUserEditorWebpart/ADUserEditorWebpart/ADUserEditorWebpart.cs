@@ -371,7 +371,7 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
                             {
                                 TextBox tb = new TextBox();
                                 tb.CssClass = "ms-long";
-                                tb.ID = "tb" + i;
+                                //tb.ID = "tb" + i;
                                 pa.Controls.Add(tb);
                                 pa.Controls.Add(new LiteralControl("<br />"));
                             }
