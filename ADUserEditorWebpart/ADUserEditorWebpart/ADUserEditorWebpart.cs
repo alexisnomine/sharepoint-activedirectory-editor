@@ -1,10 +1,17 @@
 ﻿/* --- AD User Editor Webpart ---
- * Version: 2.1.0
+ * Version: 2.1.1
  * Author: Alexis NOMINE
  * Website: http://alexis.nomine.fr/
  * Licence: MIT
  * ------------------------
  * Changelog:
+ * ------------------------
+ * 2.1.1 :  - displayName instead of distinguishedName (CN=xxx,DC=xxx) in read only fields like "manager"
+ *          - read only field can now display multiple values
+ *          - no more exception trying to display errors (sic)
+ *          - message displayed when webpart hasn't yet been configured
+ *          - having multiple multitextbox fields is now possible
+ * 
  * 2.1.0 :  - thumbnailPhoto attribute modification with image upload resizing & croping (jpg only)
  *          - new field types for multivaluated properties: checkboxlist, multitextbox
  *          - autosize listbox
@@ -14,14 +21,9 @@
  *          - auto uppercase domain NetBios name (-> less config errors)
  *          - better "person field" handling ('DOMAIN\username' instead of just 'username' when filling the field)
  *          - edit form now with the current theme style
- *          
+ * 
  * 2.0.0 : - Initial release for SharePoint 2010
- *          
- * TODO:    - Mandatory fields
- *          - Regex Validation (email, phone address...)
- *          - Ability to create users
- *          - Custom CSS
- *          - Fix "person field" not clearing correctly in certain cases
+ * 
  */
 
 using System;

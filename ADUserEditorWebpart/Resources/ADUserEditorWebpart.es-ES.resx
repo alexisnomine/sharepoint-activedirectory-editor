@@ -163,7 +163,7 @@
     <value>Seleccionar</value>
   </data>
   <data name="WebPartDescription" xml:space="preserve">
-    <value>Webpart that allows to easily modify any profile property of any person in Active Directory. (version 2.1.0)</value>
+    <value>Webpart that allows to easily modify any profile property of any person in Active Directory. (version 2.1.1)</value>
   </data>
   <data name="lgClear" xml:space="preserve">
     <value>Borrar</value>
