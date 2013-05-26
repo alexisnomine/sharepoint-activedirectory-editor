@@ -793,6 +793,25 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
             return null; // if nothing found
         }
 
+        private string getDisplayName(string Name)
+        {
+            search.Filter = "(distinguishedName=" + Name + ")";
+
+            //try to find the user in every domain
+            foreach (KeyValuePair<string, domainConnexion> _domain in domains)
+            {
+                ADConnexion.Path = _domain.Value.path;
+                ADConnexion.Username = _domain.Value.login;
+                ADConnexion.Password = _domain.Value.password;
+                SearchResult sr = search.FindOne();
+                if (sr != null)
+                {
+                    return sr.Properties["displayName"][0].ToString();
+                }
+            }
+            return null; // if nothing found
+        }
+
         private void selectUser()
         {
             try
@@ -921,7 +940,11 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
                                         if (j > 0)
                                             lbl.Text += "<br />";
 
-                                        lbl.Text += txt;
+                                        // display "display name" if string is a "distinguished name"
+                                        if (!txt.Contains("CN="))
+                                            lbl.Text += txt;
+                                        else
+                                            lbl.Text += getDisplayName(txt);
 
                                         j++;
                                     }
