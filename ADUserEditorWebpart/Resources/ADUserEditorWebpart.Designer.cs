@@ -97,6 +97,15 @@ namespace ADUserEditorWebpart.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à AD User Editor needs to be configured.
+        /// </summary>
+        internal static string lgConfigurationNeeded {
+            get {
+                return ResourceManager.GetString("lgConfigurationNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &lt;properties&gt;&lt;property adname=&apos;displayName&apos; name=&apos;Full Name&apos; type=&apos;readonly&apos; /&gt;&lt;property adname=&apos;thumbnailPhoto&apos; name=&apos;Photo&apos; type=&apos;image&apos; /&gt;&lt;property adname=&apos;sn&apos; name=&apos;Last Name&apos; type=&apos;textbox&apos; /&gt;&lt;property adname=&apos;givenName&apos; name=&apos;First Name&apos; type=&apos;textbox&apos; /&gt;&lt;property adname=&apos;manager&apos; name=&apos;Manager&apos; type=&apos;person&apos; /&gt;&lt;property adname=&apos;assistant&apos; name=&apos;Assistant&apos; type=&apos;person&apos; /&gt;&lt;property adname=&apos;department&apos; name=&apos;Service&apos; type=&apos;listbox&apos; values=&quot;IT;Human Resources;Bio;Security&quot; /&gt;&lt;property adname=&apos;title&apos; name [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string lgDefaultPropertiesConf {

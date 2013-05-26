@@ -177,4 +177,7 @@
   <data name="lgImgWrongFormat" xml:space="preserve">
     <value>Tipo de imagen incorrecto : </value>
   </data>
+  <data name="lgConfigurationNeeded" xml:space="preserve">
+    <value>AD User Editor necesita configuraciòn</value>
+  </data>
 </root>

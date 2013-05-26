@@ -135,6 +135,9 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
 
             #endregion
 
+            // check if default config still in place
+            if (!_ADDomains.Contains("<domains><domain name='NOMINE' path='LDAP://srvad/DC=nomine,DC=fr' usr='NOMINE\\admdom' pwd='xxxx' /></domains>"))
+            {
             try
             {
                 userProperties = Utilities.getUserPropertiesFromXML(ADProperties);
@@ -463,6 +466,11 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
             {
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
                 error(ex.ToString());
+            }
+            }
+            else
+            {
+                error(Utilities.getLocalizedValue("lgConfigurationNeeded"));
             }
         }
 
