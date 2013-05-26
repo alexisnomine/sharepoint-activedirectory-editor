@@ -140,335 +140,335 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
             // check if default config still in place
             if (!_ADDomains.Contains("<domains><domain name='NOMINE' path='LDAP://srvad/DC=nomine,DC=fr' usr='NOMINE\\admdom' pwd='xxxx' /></domains>"))
             {
-            try
-            {
-                userProperties = Utilities.getUserPropertiesFromXML(ADProperties);
-                domains = Utilities.getDomainsFromXML(_ADDomains);
-                ADConnexion = new DirectoryEntry();
-                search = Utilities.initDirectorySearcher(ADConnexion, userProperties);
-
-                // no user picker if self service
-                if (!_SelfService)
+                try
                 {
-                    info(Utilities.getLocalizedValue("lgSelectUserToEdit"));
-                    #region User picker
+                    userProperties = Utilities.getUserPropertiesFromXML(ADProperties);
+                    domains = Utilities.getDomainsFromXML(_ADDomains);
+                    ADConnexion = new DirectoryEntry();
+                    search = Utilities.initDirectorySearcher(ADConnexion, userProperties);
 
-                    Table userSelection = new Table();
-                    //userSelection.CssClass = "ms-toolbar";
-                    userSelection.Style.Add("background", "white url(/_layouts/images/bgximg.png) repeat-x 0px -882px");
-                    //userSelection.CssClass = "ms-formbody";
-                    userSelection.Style.Add("border", "1px solid #a5a5a5;");
-                    userSelection.Style.Add("margin", "10px auto");
+                    // no user picker if self service
+                    if (!_SelfService)
+                    {
+                        info(Utilities.getLocalizedValue("lgSelectUserToEdit"));
+                        #region User picker
 
-                    TableRow tr1 = new TableRow();
-                    TableRow tr2 = new TableRow();
-                    TableRow tr3 = new TableRow();
-                    userSelection.Controls.Add(tr1);
-                    userSelection.Controls.Add(tr2);
-                    userSelection.Controls.Add(tr3);
-                    TableCell tc1 = new TableCell();
-                    tr1.Cells.Add(tc1);
-                    TableCell tc2 = new TableCell();
-                    tr2.Cells.Add(tc2);
-                    TableCell tc3 = new TableCell();
-                    tr3.Cells.Add(tc3);
-                    tc1.HorizontalAlign = tc3.HorizontalAlign = HorizontalAlign.Center;
+                        Table userSelection = new Table();
+                        //userSelection.CssClass = "ms-toolbar";
+                        userSelection.Style.Add("background", "white url(/_layouts/images/bgximg.png) repeat-x 0px -882px");
+                        //userSelection.CssClass = "ms-formbody";
+                        userSelection.Style.Add("border", "1px solid #a5a5a5;");
+                        userSelection.Style.Add("margin", "10px auto");
 
-                    Label userSelectLabel = new Label();
-                    userSelectLabel.Text = Utilities.getLocalizedValue("lgUserSelection");
-                    tc1.Controls.Add(userSelectLabel);
+                        TableRow tr1 = new TableRow();
+                        TableRow tr2 = new TableRow();
+                        TableRow tr3 = new TableRow();
+                        userSelection.Controls.Add(tr1);
+                        userSelection.Controls.Add(tr2);
+                        userSelection.Controls.Add(tr3);
+                        TableCell tc1 = new TableCell();
+                        tr1.Cells.Add(tc1);
+                        TableCell tc2 = new TableCell();
+                        tr2.Cells.Add(tc2);
+                        TableCell tc3 = new TableCell();
+                        tr3.Cells.Add(tc3);
+                        tc1.HorizontalAlign = tc3.HorizontalAlign = HorizontalAlign.Center;
 
-                    userSelect = new PeopleEditor();
-                    userSelect.MultiSelect = false;
-                    userSelect.AllowEmpty = false;
-                    tc2.Controls.Add(userSelect);
+                        Label userSelectLabel = new Label();
+                        userSelectLabel.Text = Utilities.getLocalizedValue("lgUserSelection");
+                        tc1.Controls.Add(userSelectLabel);
 
-                    Button selectUser = new Button();
-                    selectUser.Text = Utilities.getLocalizedValue("lgValidate");
-                    selectUser.Click += new EventHandler(selectUser_Click);
-                    tc3.Controls.Add(selectUser);
+                        userSelect = new PeopleEditor();
+                        userSelect.MultiSelect = false;
+                        userSelect.AllowEmpty = false;
+                        tc2.Controls.Add(userSelect);
 
-                    this.Controls.Add(userSelection);
+                        Button selectUser = new Button();
+                        selectUser.Text = Utilities.getLocalizedValue("lgValidate");
+                        selectUser.Click += new EventHandler(selectUser_Click);
+                        tc3.Controls.Add(selectUser);
+
+                        this.Controls.Add(userSelection);
+
+                        #endregion
+                    }
+
+                    #region Edit form
+
+                    EditFields = new Dictionary<string, Control>();
+                    editForm = new Table();
+                    //appearance
+                    editForm.CssClass = "ms-formtable";
+                    editForm.Width = Unit.Percentage(100);
+                    editForm.CellSpacing = 0;
+                    editForm.EnableViewState = true;
+
+                    #region fields
+
+                    foreach (userProperty prop in userProperties)
+                    {
+                        // Add the table row
+                        TableRow oRow = new TableRow();
+                        editForm.Rows.Add(oRow);
+
+                        // Add the cells
+                        TableCell oCellLabel = new TableCell();
+                        oCellLabel.Width = Unit.Pixel(190);//.Percentage(40);
+                        oRow.Cells.Add(oCellLabel);
+                        TableCell oCellControl = new TableCell();
+                        //oCellControl.Width = Unit.Percentage(60);
+                        oRow.Cells.Add(oCellControl);
+
+                        // Create the label field
+                        Label l = new Label();
+                        l.Text = prop.Name;
+
+                        // Add the label to the table cell
+                        oCellLabel.Controls.Add(l);
+
+                        // Set the css class of the cell for the SharePoint styles
+                        oCellLabel.CssClass = "ms-formlabel";
+                        oCellControl.CssClass = "ms-formbody";
+
+                        switch (prop.Type)
+                        {
+                            case "textbox":
+                                // Create the form field
+                                TextBox t = new TextBox();
+                                t.CssClass = "ms-long";
+                                t.ID = prop.ADName;
+                                //t.EnableViewState = true;
+
+                                // Add the field to the table cell and to field references
+                                oCellControl.Controls.Add(t);
+                                EditFields.Add(prop.ADName, t);
+                                break;
+
+                            case "listbox":
+                                ListBox lb = new ListBox();
+                                lb.ID = prop.ADName;
+                                lb.SelectionMode = ListSelectionMode.Single; // one selection only
+                                lb.CssClass = "ms-long";
+                                lb.Items.Add(""); // add empty item
+
+                                string[] List2 = null;
+                                if (prop.Values != null)
+                                {
+                                    List2 = prop.Values.Split(';');
+                                    foreach (string listItem in List2)
+                                    {
+                                        if (listItem.Contains(",")) // Pairs name/value
+                                        {
+                                            lb.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
+                                        }
+                                        else // Only value
+                                        {
+                                            lb.Items.Add(listItem.Trim());
+                                        }
+                                    }
+                                }
+
+                                lb.Rows = List2.Length + 1;
+
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(lb);
+                                EditFields.Add(prop.ADName, lb);
+                                break;
+
+                            case "checkboxlist":
+                                CheckBoxList cbl = new CheckBoxList();
+                                cbl.ID = prop.ADName;
+
+                                string[] List3 = null;
+                                if (prop.Values != null)
+                                {
+                                    List3 = prop.Values.Split(';');
+                                    foreach (string listItem in List3)
+                                    {
+                                        if (listItem.Contains(",")) // Pairs name/value
+                                        {
+                                            cbl.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
+                                        }
+                                        else // Only value
+                                        {
+                                            cbl.Items.Add(listItem.Trim());
+                                        }
+                                    }
+                                }
+
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(cbl);
+                                EditFields.Add(prop.ADName, cbl);
+                                break;
+
+                            case "dropdown":
+                                DropDownList dl = new DropDownList();
+                                dl.ID = prop.ADName;
+                                dl.CssClass = "ms-long";
+                                dl.Items.Add("");
+
+                                //generates each list item
+                                string[] List;
+                                if (prop.Values != null)
+                                {
+                                    List = prop.Values.Split(';');
+
+                                    foreach (string listItem in List)
+                                    {
+                                        if (listItem.Contains(",")) // Pair name/value
+                                        {
+                                            dl.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
+                                        }
+                                        else // only value
+                                        {
+                                            dl.Items.Add(listItem.Trim());
+                                        }
+                                    }
+                                }
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(dl);
+                                EditFields.Add(prop.ADName, dl);
+                                break;
+
+                            case "person":
+                                PeopleEditor p = new PeopleEditor();
+                                p.MultiSelect = false; // only one user
+                                p.ID = prop.ADName;
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(p);
+                                EditFields.Add(prop.ADName, p);
+                                break;
+                            case "date":
+                                DateTimeControl dtc = new DateTimeControl();
+                                dtc.DateOnly = true;
+                                dtc.ID = prop.ADName;
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(dtc);
+                                EditFields.Add(prop.ADName, dtc);
+                                break;
+                            case "readonly":
+                                Label lbl = new Label();
+                                lbl.ID = prop.ADName;
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(lbl);
+                                EditFields.Add(prop.ADName, lbl);
+                                break;
+                            case "multitextbox":
+                                // main panel
+                                Panel pa = new Panel();
+                                pa.ID = prop.ADName;
+
+                                /*
+                                // store the number of text fields
+                                HiddenField tbNum = new HiddenField();
+                                tbNum.ID = "tbNum";
+                                tbNum.Value = "1";
+                                pa.Controls.Add(tbNum);
+                                //TODO: don't forget to clear this hidden row in clearFields()
+
+                                int numTextBox = Int32.Parse(tbNum.Value);*/
+
+                                int numTextBox = 1;
+                                if (prop.Values != null)
+                                    numTextBox = Int32.Parse(prop.Values);
+
+                                for (int i = 0; i < numTextBox; i++)
+                                {
+                                    TextBox tb = new TextBox();
+                                    tb.CssClass = "ms-long";
+                                    //tb.ID = "tb" + i;
+                                    pa.Controls.Add(tb);
+                                    pa.Controls.Add(new LiteralControl("<br />"));
+                                }
+
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(pa);
+                                EditFields.Add(prop.ADName, pa);
+                                break;
+                            case "image":
+                                FileUpload fu = new FileUpload();
+                                fu.ID = prop.ADName;
+
+                                // default image in base64
+                                Image img = new Image();
+                                img.ID = "previewImg";
+                                img.ImageUrl = "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gOTAK/9sAQwAEAgMDAwIEAwMDBAQEBAUJBgUFBQULCAgGCQ0LDQ0NCwwMDhAUEQ4PEw8MDBIYEhMVFhcXFw4RGRsZFhoUFhcW/9sAQwEEBAQFBQUKBgYKFg8MDxYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYW/8AAEQgAgACAAwEiAAIRAQMRAf/EABsAAQEAAwEBAQAAAAAAAAAAAAAHAwQGBQII/8QAOBAAAgIBAgIHBAkDBQAAAAAAAAECAwQFEQYhBxITMUFRYXGBkaEUFSIyUrHB4fAjM7JCY4KS0f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9FAAAAAAAAAAAAAAAAAAAAAAAAAAAAZMWi7IyIUUVystsfVjGK3bYGMHf8NcC0VQV+rvtbGt+whLaEfa1zb9nL2nWYWBhYcVHGxKKUvwVqIEUBbczDxMqPVycWm5PwsrUvzOW4j4Fw8iDu0qX0a7v7KTbrl+q/L0AnYM2djX4eVPHya5V21vaUX4GEAAAAAAAAAAABTujzh+GmaeszIgvpl63e651RfdFevn8PA4jgbBjn8T41M1vXCXaT9VHnt73sveV0AAAAAA5/jnQa9Y06U6oJZlMW6peMl+B+j8PJ+8lkk4ycZJxaezT70XMlXSXgRwuKbXCO0MmKuSXm91L5pv3geAAAAAAAAAAAOr6IEnxPdulusSW3/eBSSUdHGXHE4ux+u9o39apv1a5fNIq4AAAAAAJ70yJfWmE9ufYy5/8ihEv6VMtZPFUqovdYtUa3t585P8Ay29wHNgAAAAAAAAAD6rnKFkZwk4yi04yXen5lc4R1erWdIryOsu2glG+K/0z/wDH3r9iQno8M6ln6bqUbMBSsnP7MqUnJWryaQFjBp6RkW5eFC+7EtxZy+9Vbt1l+3w9huAADX1LIni4c74Y1uRKK5VVpOUgNbiTU6NI0uzMuabitq4b85y8F/PDckGVdZk5NmRdLrWWzcpy823uz0eLdV1DVNSlLOhKlV7qGO00q17H4+bPKAAAAAAAAAAHRcAcOvWMx5GSmsOiS6/+5L8K/X9wPjhDhbL1qSvsbow0+djXOfpFfr3e0oui6Rp+lUKvCxlB7bSm1vKXtf8AEblVcKq1XXFRhBJRilskl4IyAAAAAAGhrOk6fqtHZZuNCzZfZl3Tj7Jd6J3xhwrlaO3kUt34e/8Ac2+1X6SX6/kVMx21wtrddkVKE01KMlumn4MCHg6PpA4c+qMpZWLFvDulsl39lL8L9PL+b84AAAAAAbGlYd2oajThULey6ait+5ebfolu/cWHSMKjTtOqwseO1dUeqn4t+Lfq3zOM6H9PU78nU5x3Vf8ARqfq+cvlt8Wd8AAAAAAAAAAAGrquHTn4FuHfFOu6PVfmvJr1T5ke1jCt07U78K/79M3Hfb7y8H71sy1nB9MGnJSxtUrjt1v6NrXxi/8AL5AcOAAAAArPR5irF4SxFts7Yu2T8+s918tj2zW0mpU6VjUpbKumEfhFI2QAAAAAAAAAAAHi8e4v0zhPMhtzrr7WL8nH7T+Sa957Rg1CCuwb6nzU6pR+KaAiQAA//9k=";
+
+                                Label imgInfo = new Label();
+                                imgInfo.Text = Utilities.getLocalizedValue("lgImgConstraints");
+
+                                Label imgAlert = new Label();
+                                imgAlert.ForeColor = System.Drawing.Color.Red;
+                                imgAlert.Visible = false;
+
+                                Button clearImgBtn = new Button();
+                                clearImgBtn.Text = Utilities.getLocalizedValue("lgClear");
+                                clearImgBtn.Click += new EventHandler(clearImgBtn_Click);
+
+                                HiddenField clearImg = new HiddenField();
+                                clearImg.ID = "clearImg";
+                                clearImg.Value = "0";
+
+                                // Add the field to the table cell and editFields list
+                                oCellControl.Controls.Add(img);
+                                oCellControl.Controls.Add(new LiteralControl("<br />"));
+                                oCellControl.Controls.Add(clearImg);
+                                oCellControl.Controls.Add(clearImgBtn);
+                                oCellControl.Controls.Add(new LiteralControl("<br />"));
+                                oCellControl.Controls.Add(fu);
+                                oCellControl.Controls.Add(new LiteralControl("<br />"));
+                                oCellControl.Controls.Add(imgInfo);
+                                oCellControl.Controls.Add(new LiteralControl("<br />"));
+                                oCellControl.Controls.Add(imgAlert);
+
+                                EditFields.Add(prop.ADName + "Preview", img);
+                                EditFields.Add(prop.ADName + "Clear", clearImg);
+                                EditFields.Add(prop.ADName + "Alert", imgAlert);
+                                EditFields.Add(prop.ADName, fu);
+                                break;
+                            default: break;
+                        }
+                    }
+
+                    #endregion
+
+                    #region buttons apply and cancel
+
+                    Button apply = new Button();
+                    apply.Text = Utilities.getLocalizedValue("lgApply");
+                    apply.Click += new EventHandler(apply_Click);
+
+                    Button reset = new Button();
+                    reset.Text = Utilities.getLocalizedValue("lgCancel");
+                    reset.Click += new EventHandler(reset_Click);
+
+                    Label spacer = new Label();
+                    spacer.Text = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
+                    TableRow trButtons = new TableRow();
+                    TableCell tcButtons = new TableCell();
+                    //tcButtons.HorizontalAlign = HorizontalAlign.Right;
+                    trButtons.Cells.Add(new TableCell());
+                    trButtons.Cells.Add(tcButtons);
+                    tcButtons.Controls.Add(reset);
+                    tcButtons.Controls.Add(spacer);
+                    tcButtons.Controls.Add(apply);
+                    trButtons.CssClass = "ms-formbody";
+
+                    //editForm.Rows.AddAt(0, trButtons);
+                    editForm.Rows.Add(trButtons);
+                    editForm.Visible = false;
+
+                    this.Controls.Add(editForm);
+                    #endregion
 
                     #endregion
                 }
-
-                #region Edit form
-
-                EditFields = new Dictionary<string, Control>();
-                editForm = new Table();
-                //appearance
-                editForm.CssClass = "ms-formtable";
-                editForm.Width = Unit.Percentage(100);
-                editForm.CellSpacing = 0;
-                editForm.EnableViewState = true;
-
-                #region fields
-
-                foreach (userProperty prop in userProperties)
+                catch (Exception ex)
                 {
-                    // Add the table row
-                    TableRow oRow = new TableRow();
-                    editForm.Rows.Add(oRow);
-
-                    // Add the cells
-                    TableCell oCellLabel = new TableCell();
-                    oCellLabel.Width = Unit.Pixel(190);//.Percentage(40);
-                    oRow.Cells.Add(oCellLabel);
-                    TableCell oCellControl = new TableCell();
-                    //oCellControl.Width = Unit.Percentage(60);
-                    oRow.Cells.Add(oCellControl);
-
-                    // Create the label field
-                    Label l = new Label();
-                    l.Text = prop.Name;
-
-                    // Add the label to the table cell
-                    oCellLabel.Controls.Add(l);
-
-                    // Set the css class of the cell for the SharePoint styles
-                    oCellLabel.CssClass = "ms-formlabel";
-                    oCellControl.CssClass = "ms-formbody";
-
-                    switch (prop.Type)
-                    {
-                        case "textbox":
-                            // Create the form field
-                            TextBox t = new TextBox();
-                            t.CssClass = "ms-long";
-                            t.ID = prop.ADName;
-                            //t.EnableViewState = true;
-
-                            // Add the field to the table cell and to field references
-                            oCellControl.Controls.Add(t);
-                            EditFields.Add(prop.ADName, t);
-                            break;
-
-                        case "listbox":
-                            ListBox lb = new ListBox();
-                            lb.ID = prop.ADName;
-                            lb.SelectionMode = ListSelectionMode.Single; // one selection only
-                            lb.CssClass = "ms-long";
-                            lb.Items.Add(""); // add empty item
-
-                            string[] List2 = null;
-                            if (prop.Values != null)
-                            {
-                                List2 = prop.Values.Split(';');
-                                foreach (string listItem in List2)
-                                {
-                                    if (listItem.Contains(",")) // Pairs name/value
-                                    {
-                                        lb.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
-                                    }
-                                    else // Only value
-                                    {
-                                        lb.Items.Add(listItem.Trim());
-                                    }
-                                }
-                            }
-
-                            lb.Rows = List2.Length+1;
-
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(lb);
-                            EditFields.Add(prop.ADName, lb);
-                            break;
-
-                        case "checkboxlist":
-                            CheckBoxList cbl = new CheckBoxList();
-                            cbl.ID = prop.ADName;
-
-                            string[] List3 = null;
-                            if (prop.Values != null)
-                            {
-                                List3 = prop.Values.Split(';');
-                                foreach (string listItem in List3)
-                                {
-                                    if (listItem.Contains(",")) // Pairs name/value
-                                    {
-                                        cbl.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
-                                    }
-                                    else // Only value
-                                    {
-                                        cbl.Items.Add(listItem.Trim());
-                                    }
-                                }
-                            }
-
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(cbl);
-                            EditFields.Add(prop.ADName, cbl);
-                            break;
-
-                        case "dropdown":
-                            DropDownList dl = new DropDownList();
-                            dl.ID = prop.ADName;
-                            dl.CssClass = "ms-long";
-                            dl.Items.Add("");
-
-                            //generates each list item
-                            string[] List;
-                            if (prop.Values != null)
-                            {
-                                List = prop.Values.Split(';');
-
-                                foreach (string listItem in List)
-                                {
-                                    if (listItem.Contains(",")) // Pair name/value
-                                    {
-                                        dl.Items.Add(new ListItem(listItem.Split(',')[0].Trim(), listItem.Split(',')[1].Trim()));
-                                    }
-                                    else // only value
-                                    {
-                                        dl.Items.Add(listItem.Trim());
-                                    }
-                                }
-                            }
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(dl);
-                            EditFields.Add(prop.ADName, dl);
-                            break;
-
-                        case "person":
-                            PeopleEditor p = new PeopleEditor();
-                            p.MultiSelect = false; // only one user
-                            p.ID = prop.ADName;
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(p);
-                            EditFields.Add(prop.ADName, p);
-                            break;
-                        case "date":
-                            DateTimeControl dtc = new DateTimeControl();
-                            dtc.DateOnly = true;
-                            dtc.ID = prop.ADName;
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(dtc);
-                            EditFields.Add(prop.ADName, dtc);
-                            break;
-                        case "readonly":
-                            Label lbl = new Label();
-                            lbl.ID = prop.ADName;
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(lbl);
-                            EditFields.Add(prop.ADName, lbl);
-                            break;
-                        case "multitextbox":
-                            // main panel
-                            Panel pa = new Panel();
-                            pa.ID = prop.ADName;
-
-                            /*
-                            // store the number of text fields
-                            HiddenField tbNum = new HiddenField();
-                            tbNum.ID = "tbNum";
-                            tbNum.Value = "1";
-                            pa.Controls.Add(tbNum);
-                            //TODO: don't forget to clear this hidden row in clearFields()
-
-                            int numTextBox = Int32.Parse(tbNum.Value);*/
-
-                            int numTextBox = 1;
-                            if (prop.Values != null)
-                                numTextBox = Int32.Parse(prop.Values);
-
-                            for (int i = 0; i < numTextBox; i++)
-                            {
-                                TextBox tb = new TextBox();
-                                tb.CssClass = "ms-long";
-                                //tb.ID = "tb" + i;
-                                pa.Controls.Add(tb);
-                                pa.Controls.Add(new LiteralControl("<br />"));
-                            }
-
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(pa);
-                            EditFields.Add(prop.ADName, pa);
-                            break;
-                        case "image":
-                            FileUpload fu = new FileUpload();
-                            fu.ID = prop.ADName;
-
-                            // default image in base64
-                            Image img = new Image();
-                            img.ID = "previewImg";
-                            img.ImageUrl = "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEASABIAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gOTAK/9sAQwAEAgMDAwIEAwMDBAQEBAUJBgUFBQULCAgGCQ0LDQ0NCwwMDhAUEQ4PEw8MDBIYEhMVFhcXFw4RGRsZFhoUFhcW/9sAQwEEBAQFBQUKBgYKFg8MDxYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYW/8AAEQgAgACAAwEiAAIRAQMRAf/EABsAAQEAAwEBAQAAAAAAAAAAAAAHAwQGBQII/8QAOBAAAgIBAgIHBAkDBQAAAAAAAAECAwQFEQYhBxITMUFRYXGBkaEUFSIyUrHB4fAjM7JCY4KS0f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9FAAAAAAAAAAAAAAAAAAAAAAAAAAAAZMWi7IyIUUVystsfVjGK3bYGMHf8NcC0VQV+rvtbGt+whLaEfa1zb9nL2nWYWBhYcVHGxKKUvwVqIEUBbczDxMqPVycWm5PwsrUvzOW4j4Fw8iDu0qX0a7v7KTbrl+q/L0AnYM2djX4eVPHya5V21vaUX4GEAAAAAAAAAAABTujzh+GmaeszIgvpl63e651RfdFevn8PA4jgbBjn8T41M1vXCXaT9VHnt73sveV0AAAAAA5/jnQa9Y06U6oJZlMW6peMl+B+j8PJ+8lkk4ycZJxaezT70XMlXSXgRwuKbXCO0MmKuSXm91L5pv3geAAAAAAAAAAAOr6IEnxPdulusSW3/eBSSUdHGXHE4ux+u9o39apv1a5fNIq4AAAAAAJ70yJfWmE9ufYy5/8ihEv6VMtZPFUqovdYtUa3t585P8Ay29wHNgAAAAAAAAAD6rnKFkZwk4yi04yXen5lc4R1erWdIryOsu2glG+K/0z/wDH3r9iQno8M6ln6bqUbMBSsnP7MqUnJWryaQFjBp6RkW5eFC+7EtxZy+9Vbt1l+3w9huAADX1LIni4c74Y1uRKK5VVpOUgNbiTU6NI0uzMuabitq4b85y8F/PDckGVdZk5NmRdLrWWzcpy823uz0eLdV1DVNSlLOhKlV7qGO00q17H4+bPKAAAAAAAAAAHRcAcOvWMx5GSmsOiS6/+5L8K/X9wPjhDhbL1qSvsbow0+djXOfpFfr3e0oui6Rp+lUKvCxlB7bSm1vKXtf8AEblVcKq1XXFRhBJRilskl4IyAAAAAAGhrOk6fqtHZZuNCzZfZl3Tj7Jd6J3xhwrlaO3kUt34e/8Ac2+1X6SX6/kVMx21wtrddkVKE01KMlumn4MCHg6PpA4c+qMpZWLFvDulsl39lL8L9PL+b84AAAAAAbGlYd2oajThULey6ait+5ebfolu/cWHSMKjTtOqwseO1dUeqn4t+Lfq3zOM6H9PU78nU5x3Vf8ARqfq+cvlt8Wd8AAAAAAAAAAAGrquHTn4FuHfFOu6PVfmvJr1T5ke1jCt07U78K/79M3Hfb7y8H71sy1nB9MGnJSxtUrjt1v6NrXxi/8AL5AcOAAAAArPR5irF4SxFts7Yu2T8+s918tj2zW0mpU6VjUpbKumEfhFI2QAAAAAAAAAAAHi8e4v0zhPMhtzrr7WL8nH7T+Sa957Rg1CCuwb6nzU6pR+KaAiQAA//9k=";
-                            
-                            Label imgInfo = new Label();
-                            imgInfo.Text = Utilities.getLocalizedValue("lgImgConstraints");
-
-                            Label imgAlert = new Label();
-                            imgAlert.ForeColor = System.Drawing.Color.Red;
-                            imgAlert.Visible = false;
-
-                            Button clearImgBtn = new Button();
-                            clearImgBtn.Text = Utilities.getLocalizedValue("lgClear");
-                            clearImgBtn.Click += new EventHandler(clearImgBtn_Click);
-
-                            HiddenField clearImg = new HiddenField();
-                            clearImg.ID = "clearImg";
-                            clearImg.Value = "0";
-
-                            // Add the field to the table cell and editFields list
-                            oCellControl.Controls.Add(img);
-                            oCellControl.Controls.Add(new LiteralControl("<br />"));
-                            oCellControl.Controls.Add(clearImg);
-                            oCellControl.Controls.Add(clearImgBtn);
-                            oCellControl.Controls.Add(new LiteralControl("<br />"));
-                            oCellControl.Controls.Add(fu);
-                            oCellControl.Controls.Add(new LiteralControl("<br />"));
-                            oCellControl.Controls.Add(imgInfo);
-                            oCellControl.Controls.Add(new LiteralControl("<br />"));
-                            oCellControl.Controls.Add(imgAlert);
-
-                            EditFields.Add(prop.ADName + "Preview", img);
-                            EditFields.Add(prop.ADName + "Clear", clearImg);
-                            EditFields.Add(prop.ADName + "Alert", imgAlert);
-                            EditFields.Add(prop.ADName, fu);
-                            break;
-                        default: break;
-                    }
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    error(ex.ToString());
                 }
-
-                #endregion
-
-                #region buttons apply and cancel
-
-                Button apply = new Button();
-                apply.Text = Utilities.getLocalizedValue("lgApply");
-                apply.Click += new EventHandler(apply_Click);
-
-                Button reset = new Button();
-                reset.Text = Utilities.getLocalizedValue("lgCancel");
-                reset.Click += new EventHandler(reset_Click);
-
-                Label spacer = new Label();
-                spacer.Text = "&nbsp;&nbsp;&nbsp;&nbsp;";
-
-                TableRow trButtons = new TableRow();
-                TableCell tcButtons = new TableCell();
-                //tcButtons.HorizontalAlign = HorizontalAlign.Right;
-                trButtons.Cells.Add(new TableCell());
-                trButtons.Cells.Add(tcButtons);
-                tcButtons.Controls.Add(reset);
-                tcButtons.Controls.Add(spacer);
-                tcButtons.Controls.Add(apply);
-                trButtons.CssClass = "ms-formbody";
-
-                //editForm.Rows.AddAt(0, trButtons);
-                editForm.Rows.Add(trButtons);
-                editForm.Visible = false;
-
-                this.Controls.Add(editForm);
-                #endregion
-
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
-                error(ex.ToString());
-            }
             }
             else
             {
