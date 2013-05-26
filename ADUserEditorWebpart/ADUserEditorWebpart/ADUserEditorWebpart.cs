@@ -120,26 +120,27 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
 
         protected override void CreateChildControls()
         {
+            this.UseDefaultStyles = false; // No default styles
+            CssRegistration.Register("/_layouts/1036/styles/Themable/forms.css");
+
+            #region Info Zone
+
+            state = new Label();
+            state.CssClass = "ms-informationbar";
+            state.Style.Add("display", "block");
+            state.Style.Add("padding", "5px 5px 5px 25px");
+            state.Style.Add("margin", "10px");
+            state.Visible = false;
+            this.Controls.Add(state);
+
+            #endregion
+
             try
             {
                 userProperties = Utilities.getUserPropertiesFromXML(ADProperties);
                 domains = Utilities.getDomainsFromXML(_ADDomains);
                 ADConnexion = new DirectoryEntry();
                 search = Utilities.initDirectorySearcher(ADConnexion, userProperties);
-
-                CssRegistration.Register("/_layouts/1036/styles/Themable/forms.css");
-
-                #region Info Zone
-
-                state = new Label();
-                state.CssClass = "ms-informationbar";
-                state.Style.Add("display", "block");
-                state.Style.Add("padding", "5px 5px 5px 25px");
-                state.Style.Add("margin", "10px");
-                state.Visible = false;
-                this.Controls.Add(state);
-
-                #endregion
 
                 // no user picker if self service
                 if (!_SelfService)
