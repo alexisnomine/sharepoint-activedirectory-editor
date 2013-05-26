@@ -912,7 +912,19 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
                                     break;
                                 case "readonly":
                                     Label lbl = (Label)EditFields[prop.ADName];
-                                    lbl.Text = CurrentUser.Properties[prop.ADName][0].ToString();
+                                    int j = 0;
+                                    foreach (String value in CurrentUser.Properties[prop.ADName])
+                                    {
+                                        String txt = value;
+
+                                        //line break between results
+                                        if (j > 0)
+                                            lbl.Text += "<br />";
+
+                                        lbl.Text += txt;
+
+                                        j++;
+                                    }
                                     break;
                                 case "multitextbox":
                                     Panel pa = (Panel)EditFields[prop.ADName];
