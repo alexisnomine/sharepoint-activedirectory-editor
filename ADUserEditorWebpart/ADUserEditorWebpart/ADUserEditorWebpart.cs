@@ -1,11 +1,13 @@
 ﻿/* --- AD User Editor Webpart ---
- * Version: 2.1.1
+ * Version: 2.1.2
  * Author: Alexis NOMINE
  * Website: http://alexis.nomine.fr/
  * Licence: MIT
  * ------------------------
  * Changelog:
  * ------------------------
+ * 2.1.2 :  - Dutch translation, thanks to maarteng
+ * 
  * 2.1.1 :  - displayName instead of distinguishedName (CN=xxx,DC=xxx) in read only fields like "manager"
  *          - read only field can now display multiple values
  *          - no more exception trying to display errors (sic)

@@ -241,7 +241,7 @@ namespace ADUserEditorWebpart.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à AD User Editor is a WebPart that allows to edit easily any user profile attribute in Active Directory trough a customizable form. (version 2.1.1).
+        ///   Recherche une chaîne localisée semblable à AD User Editor is a WebPart that allows to edit easily any user profile attribute in Active Directory trough a customizable form. (version 2.1.2).
         /// </summary>
         internal static string WebPartDescription {
             get {

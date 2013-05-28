@@ -163,7 +163,7 @@
     <value>Select</value>
   </data>
   <data name="WebPartDescription" xml:space="preserve">
-    <value>AD User Editor is a WebPart that allows to edit easily any user profile attribute in Active Directory trough a customizable form. (version 2.1.1)</value>
+    <value>AD User Editor is a WebPart that allows to edit easily any user profile attribute in Active Directory trough a customizable form. (version 2.1.2)</value>
   </data>
   <data name="lgClear" xml:space="preserve">
     <value>Clear</value>
