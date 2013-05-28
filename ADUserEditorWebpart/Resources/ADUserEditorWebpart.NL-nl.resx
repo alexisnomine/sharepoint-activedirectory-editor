@@ -127,7 +127,7 @@
     <value>Configuratie</value>
   </data>
   <data name="lgDefaultPropertiesConf" xml:space="preserve">
-    <value>&lt;properties&gt;&lt;property adname='displayName' name='Full Name' type='readonly' /&gt;&lt;property adname='thumbnailPhoto' name='Photo' type='image' /&gt;&lt;property adname='sn' name='Last Name' type='textbox' /&gt;&lt;property adname='givenName' name='First Name' type='textbox' /&gt;&lt;property adname='manager' name='Manager' type='person' /&gt;&lt;property adname='assistant' name='Assistant' type='person' /&gt;&lt;property adname='department' name='Service' type='listbox' values="IT;Human Resources;Bio;Security" /&gt;&lt;property adname='title' name='Title' type='textbox' /&gt;&lt;property adname='employeeType' name="Employee Type" type='dropdown' values='Technician,tech;Manager,mgr;Director,dir' /&gt;&lt;property adname='telephoneNumber' name='Telephone number' type='textbox' /&gt;&lt;property adname='otherTelephone' name="Other phone numbers" type='multitextbox' values="4" /&gt;&lt;property adname='mobile' name='Mobile' type='textbox' /&gt;&lt;property adname='facsimileTelephoneNumber' name='Fax' type='textbox' /&gt;&lt;property adname='l' name='Town' type='dropdown' values='New-York;Washington' /&gt;&lt;property adname='physicalDeliveryOfficeName' name='Office' type='textbox' /&gt;&lt;property adname='company' name='Company' type='textbox' /&gt;&lt;property adname='accountExpires' name='End of contract' type='date' /&gt;&lt;property adname='extensionCustomAttribute1' name="Certifications" type='checkboxlist' values='Cisco,CIS;Microsoft,MIC;Oracle,ORA' /&gt;&lt;/properties&gt;</value>
+    <value>&lt;properties&gt;&lt;property adname='displayName' name='Volledige naam' type='readonly' /&gt;&lt;property adname='thumbnailPhoto' name='Foto' type='image' /&gt;&lt;property adname='sn' name='Achternaam' type='textbox' /&gt;&lt;property adname='givenName' name='Voornaam' type='textbox' /&gt;&lt;property adname='manager' name='Manager' type='person' /&gt;&lt;property adname='assistant' name='Assistent' type='person' /&gt;&lt;property adname='department' name='Afdeling' type='listbox' values='IT;Human Resources;Bio;Security' /&gt;&lt;property adname='title' name='Titel' type='textbox' /&gt;&lt;property adname='employeeType' name='Type werknemer' type='dropdown' values='Technician,tech;Manager,mgr;Director,dir' /&gt;&lt;property adname='telephoneNumber' name='Telefoonnummer' type='textbox' /&gt;&lt;property adname='otherTelephone' name='Andere telefoonnummers' type='multitextbox' values='4' /&gt;&lt;property adname='mobile' name='Mobiel' type='textbox' /&gt;&lt;property adname='facsimileTelephoneNumber' name='Fax' type='textbox' /&gt;&lt;property adname='l' name='Plaats' type='dropdown' values='New-York;Washington' /&gt;&lt;property adname='physicalDeliveryOfficeName' name='Kantoor' type='textbox' /&gt;&lt;property adname='company' name='Bedrijf' type='textbox' /&gt;&lt;property adname='accountExpires' name='Einde van contract' type='date' /&gt;&lt;property adname='extensionCustomAttribute1' name='Certificeringen' type='checkboxlist' values='Cisco,CIS;Microsoft,MIC;Oracle,ORA' /&gt;&lt;/properties&gt;</value>
   </data>
   <data name="lgDomainControllers" xml:space="preserve">
     <value>Active Directory Controller(s)</value>
@@ -163,7 +163,7 @@
     <value>Selecteer</value>
   </data>
   <data name="WebPartDescription" xml:space="preserve">
-    <value>Webpart that allows to easily modify any profile property of any person in Active Directory. (version 2.1.1)</value>
+    <value>Webpart waarmee men eenvoudig elke profieloptie van elke persoon in Active Directory kan aanpassen (versie 2.1.2)</value>
   </data>
   <data name="lgClear" xml:space="preserve">
     <value>Verwijderen</value>
@@ -178,6 +178,6 @@
     <value>Fout afbeeldingsformaat:</value>
   </data>
   <data name="lgConfigurationNeeded" xml:space="preserve">
-    <value>AD User Editor needs to be configured</value>
+    <value>AD User Editor moet worden geconfigureerd</value>
   </data>
 </root>
