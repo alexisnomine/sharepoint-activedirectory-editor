@@ -102,6 +102,9 @@
   <ItemGroup>
     <Content Include="Resources\ADUserEditorWebpart.nl-NL.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\ADUserEditorWebpart.de-DE.resx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\SharePointTools\Microsoft.VisualStudio.SharePoint.targets" />
 </Project>
