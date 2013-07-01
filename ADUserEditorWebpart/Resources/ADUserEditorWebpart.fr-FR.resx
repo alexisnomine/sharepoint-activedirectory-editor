@@ -163,7 +163,7 @@
     <value>Valider</value>
   </data>
   <data name="WebPartDescription" xml:space="preserve">
-    <value>Webpart permettant de modifier facilement presque n'importe quelle propriété de profil des utilisateurs Active Directory. (version 2.1.2)</value>
+    <value>Webpart permettant de modifier facilement presque n'importe quelle propriété de profil des utilisateurs Active Directory. (version 2.1.3)</value>
   </data>
   <data name="lgClear" xml:space="preserve">
     <value>Effacer</value>

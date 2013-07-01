@@ -6,6 +6,9 @@
  * ------------------------
  * Changelog:
  * ------------------------
+ * 
+ * 2.1.3 :  - German translation, thanks to Danuueel
+ * 
  * 2.1.2 :  - Dutch translation, thanks to maarteng
  * 
  * 2.1.1 :  - displayName instead of distinguishedName (CN=xxx,DC=xxx) in read only fields like "manager"
