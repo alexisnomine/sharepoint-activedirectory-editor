@@ -1,11 +1,14 @@
 ﻿/* --- AD User Editor Webpart ---
- * Version: 2.1.2
+ * Version: 2.1.4
  * Author: Alexis NOMINE
  * Website: http://alexis.nomine.fr/
  * Licence: MIT
  * ------------------------
  * Changelog:
  * ------------------------
+ * 
+ * 2.1.4 :  - Self service authentication change from "System.Security.Principal.WindowsIdentity.GetCurrent().Name" to "SPContext.Current.Web.CurrentUser.LoginName" 
+ *          - Fix typo in default german and spanish default configuration causing errors with xml parsing
  * 
  * 2.1.3 :  - German translation, thanks to Danuueel
  * 

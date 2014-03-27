@@ -11,7 +11,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nomine Web Creations")]
 [assembly: AssemblyProduct("ADUserEditorWebpart")]
-[assembly: AssemblyCopyright("Copyright ©  2011-2013 Nomine Web Creations")]
+[assembly: AssemblyCopyright("Copyright ©  2011-2014 Nomine Web Creations")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,4 +34,4 @@ using System.Security;
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("2.1.3.0")]
+[assembly: AssemblyFileVersion("2.1.4.0")]
