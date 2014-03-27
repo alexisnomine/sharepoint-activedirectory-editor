@@ -47,6 +47,7 @@ using Microsoft.SharePoint.Utilities;
 using Microsoft.SharePoint.WebControls;
 using Microsoft.SharePoint.WebPartPages;
 using System.Linq;
+using Microsoft.SharePoint;
 
 namespace ADUserEditorWebpart.ADUserEditorWebpart
 {
