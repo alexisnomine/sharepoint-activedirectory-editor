@@ -870,7 +870,17 @@ namespace ADUserEditorWebpart.ADUserEditorWebpart
                 }
                 else // self service: select current windows user
                 {
-                    string accountName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                    string accountName = "";
+                    using (SPSite site = new SPSite(SPContext.Current.Site.ID))
+                    {
+                        using (SPWeb web = site.OpenWeb(SPContext.Current.Web.ID))
+                        {
+                            accountName = web.CurrentUser.LoginName;
+                        }
+                    }
+                    if (accountName == "SHAREPOINT\\system")
+                        accountName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+
                     try
                     {
                         CurrentUser = findFromAccountName(accountName);
